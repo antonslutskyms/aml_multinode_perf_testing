@@ -18,6 +18,12 @@ test_and_run_command()
     fi
 }
 
+echo "=============== Checking NCCL_TOPO_FILE env variable: ==============="
+ls -l $NCCL_TOPO_FILE
+echo "Contents of $NCCL_TOPO_FILE:"
+cat $NCCL_TOPO_FILE
+echo "===================================================================="
+
 test_and_run_command \
     printenv \
     printenv \
@@ -55,3 +61,6 @@ test_and_run_command \
     all_reduce_perf \
     "all_reduce_perf -e 8G -f 2 -g 1" \
     "build and install https://github.com/NVIDIA/nccl-tests.git"
+
+echo "Checking NCCL_TOPO_FILE env variable:"
+ls -l $NCCL_TOPO_FILE

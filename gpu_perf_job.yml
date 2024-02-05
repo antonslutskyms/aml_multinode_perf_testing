@@ -8,28 +8,27 @@ code: src
 command: /bin/bash ./gpu_perf_driver.sh
 
 # to iterate quickly on your environment design, use inline
-environment: file:./environments/azureml/env.yml
+#environment: file:./environments/azureml/env.yml
 
 # to reuse with different parameters, use registered environment 
 # environment: azureml:nccltests_azureml:openmpi4.1.0-cuda11.1-cudnn8-ubuntu18.04
-# environment: azureml:nccltests_nvidia_pytorch:22.02-py3
+environment: azureml:nccltests_nvidia_pytorch:22.06-py3
 
 # NOTE: set env var if needed by your configuration
 environment_variables:
-  NCCL_DEBUG: "INFO" # adjusts the level of info from NCCL tests
-
-  # NCCL_IB_PCI_RELAXED_ORDERING: "1" # Relaxed Ordering can greatly help the performance of Infiniband networks in virtualized environments.
-  # NCCL_IB_DISABLE: "1" # force disable infiniband (if set to "1")
-  # NCCL_NET_PLUGIN: "none" # to force NET/Plugin off (no rdma/sharp plugin at all)
-  # NCCL_NET: "Socket" # to force node-to-node comm to use Socket
-  # NCCL_SOCKET_IFNAME: "eth0" # to force Socket comm to use eth0 (use NCCL_NET=Socket)
-  # NCCL_TOPO_FILE: "/opt/microsoft/ndv4-topo.xml" # Use special topology file
-
-  # UCX_IB_PCI_RELAXED_ORDERING: "on"
-  # UCX_TLS: "tcp"
-  # UCX_NET_DEVICES: "eth0" # if you have Error: Failed to resolve UCX endpoint...
-
-  # CUDA_DEVICE_ORDER: "PCI_BUS_ID" # ordering of gpus
+  NCCL_COLLNET_ENABLE: "1"
+  NCCL_ALGO: "CollnetChain,NVLS"
+  SHARP_COLL_ENABLE_SAT: "1"
+  SHARP_COLL_LOG_LEVEL: "3 
+  SHARP_COLL_ENABLE_PCI_RELAXED_ORDERING: "1"
+  UCX_TLS: "rc"
+  UCX_NET_DEVICES: "mlx5_ib0:1"
+  CUDA_DEVICE_ORDER: "PCI_BUS_ID" 
+  NCCL_SOCKET_IFNAME: "eth0"
+  NCCL_DEBUG: "warn"
+  NCCL_NET_GDR_LEVEL: "5"
+  NCCL_MIN_NCHANNELS: "32"
+  NCCL_TOPO_FILE: "/opt/microsoft/ndv5-topo.xml"
 
 
 compute: azureml:four-nodes
